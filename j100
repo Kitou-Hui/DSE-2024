@@ -1,0 +1,12 @@
+num = 1
+n=int(input()) #taking input
+for i in range(n): #outer loop for different lines
+    for j in range(i+1): #inter loop for same line
+        print(num, end=" ") #print number and add space behind
+        num = num + 1 #increase number showing by 1
+    print() #new line
+for a in range(n-2, -1, -1): #outer loop for second half, backwards of first half)   
+    for b in range(a+1):  #inter loop for second half
+        print(num, end=' ')
+        num = num + 1
+    print()
