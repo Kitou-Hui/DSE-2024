@@ -1,0 +1,18 @@
+import math #To import the math extention
+temp = 0 #To store number temporarily when switching places
+a,b,c = input().split(" ") #Getting input & splitting into the 3 numbers
+a = int(a) 
+b = int(b)
+c = int(c) #Changing from string to integer
+delta = b * b - 4 * a * c #Calculating Delta
+if delta < 0: #See if there is no real root
+    print("None")
+elif delta == 0: #See if there is only 1 real root
+    print(f'{-b / (2.0 * a):.3f}') #Calculating the one real root and correcting to 3 sig fig, then print)
+else:
+    root1 = (-b - math.sqrt(delta)) / (2.0 * a) #Calculating the first real root
+    root2 = (-b + math.sqrt(delta)) / (2.0 * a) #Calculating the second real root
+    if root1 < root2: #Comparing the two roots to put the smaller one in front
+        print(f'{root1:.3f} {root2:.3f}')
+    else:
+        print(f'{root2:.3f} {root1:.3f}')
