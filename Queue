@@ -19,9 +19,10 @@ def add(item):
 # Function to remove the front item from the queue
 def remove():
     global queue, front, end
+    temp = queue[front]
     queue[front]=" "
     front=front+1
-    return    
+    return temp
     
 # Function to return the number of items in the queue
 def size():
