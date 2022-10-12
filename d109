@@ -1,0 +1,38 @@
+change=int(input())
+
+def k():
+    return change>=1000
+
+def fh():
+    return change >=500
+
+def h():
+    return change >=100
+
+def ft():
+    return change >=50
+
+def tt():
+    return change >=20
+
+def t():
+    return change >=10
+
+while k():
+    print("1000")
+    change=change-1000
+while fh():
+    print("500")
+    change=change-500
+while h():
+    print ("100")
+    change=change-100
+while ft():
+    print("50")
+    change=change-50
+while tt():
+    print ("20")
+    change=change-20
+while t():
+    print("10")
+    change=change-10
