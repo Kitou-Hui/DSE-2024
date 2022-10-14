@@ -1,0 +1,55 @@
+a , x , b , y , c = input().split()
+
+a = int(a)
+
+b = int(b)
+
+c = int(c)
+
+ans = 0 
+
+if y == "*":
+
+    if x == "+":
+
+        ans = a + b * c
+
+    if x == "-":
+
+        ans = a - b * c
+
+    if x == "*":
+
+        ans = a * b * c
+
+if x == "*":
+
+    if y == "+":
+
+        ans = a * b + c
+
+    if y == "-":
+
+        ans = a * b - c
+
+if x == "+":
+
+    if y == "+":
+
+        ans = a + b + c
+
+    if y == "-":
+
+        ans = a + b - c
+
+if x == "-" :
+
+    if y == "+":
+
+        ans = a - b + c
+
+    if y == "-":
+
+        ans = a - b - c 
+
+print(ans)
