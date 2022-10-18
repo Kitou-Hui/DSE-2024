@@ -1,0 +1,8 @@
+n1=input()
+n2=input()
+f=input()
+v=input()
+p=input()
+
+print("I am "+n1+", my friend is "+n2)
+print("We like to eat "+ f," and go to school by "+v+" in "+p)
