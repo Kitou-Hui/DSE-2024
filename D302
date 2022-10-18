@@ -1,0 +1,5 @@
+msg=input()
+a=(msg.count(" ")+1)
+b=len(msg)
+print(b)
+print(a)
