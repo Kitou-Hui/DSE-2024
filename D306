@@ -1,0 +1,24 @@
+mail=input()
+user,host=mail.split("@")
+
+if mail.find("@")==-1:
+    print("Invalid")
+elif user[0]==".":
+    print("Invalid")
+elif user[-1]==".":
+    print("Invalid")
+elif user[user.find(".")+1]==".":
+    print("Invalid")
+elif host[0]==".":
+    print("Invalid")
+elif host[-1]==".":
+    print("Invalid")
+elif host[host.find(".")+1]==".":
+    print("Invalid")
+elif host.find(".")==-1:
+    print("Invalid")
+elif host[host.find(".")+1]=="-":
+    print("Invalid")
+elif host[host.find("-")+1]==".":
+    print("Invalid")
+else: print("valid")
