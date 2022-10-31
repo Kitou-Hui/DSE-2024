@@ -1,0 +1,21 @@
+a,b=input().split()
+a=int(a)
+b=int(b)
+q=list(map(int,input().split()))
+s=list(map(int,input().split()))
+f=False
+mid=a//2
+left=0
+right=b-1
+for i in range(0,b-1):
+    c=q[mid]
+    f=False
+    while mid!=left and mid!=right and f==False:
+        if c==q[mid]:
+            print('Yes')
+            f=True
+        elif c>q[mid]:
+            left=mid+1
+        elif c<q[mid]:
+            right = mid-1
+    print("No")
