@@ -33,9 +33,14 @@ while i != -1 and game_over == False:
         if arr[i][0] != '-' and arr[i][0] == arr[i][1] and arr[i][1] == arr[i][2]:
             game_over=True
     for j in range(3):
-        if arr[0][j] != '-' and arr[0][j] == arr[0][j] and arr[1][j] == arr[2][j]:
+        if arr[0][j] != '-' and arr[0][j] == arr[1][j] and arr[1][j] == arr[2][j]:
             game_over=True
-        
+    if arr[0][0] != "-" and arr [0][0]==arr[1][1] and arr[1][1]==arr[2][2]:
+        game_over = True
+
+    if arr[2][0]!="-" and arr [2][0]==arr[1][1] and arr[1][1]==arr[0][2]:
+        game_over=True
+
     #print the 2D array
     for a in range(3):
         for b in range(3):
