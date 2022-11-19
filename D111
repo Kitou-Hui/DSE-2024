@@ -1,0 +1,11 @@
+W , H = map( float, input()._____ ) # How to split an input?
+BMI = _____ # How to calculate BMI?
+print(f'{BMI:.___}') # Formatting the output message, how to make it 3 significant figure?
+if BMI ____: # What's the condition of underweight?
+    print("Underweight")
+elif BMI ___: # What's the condition of obese?
+    print("Obese")
+elif BMI ___: # What's the condition of overweight?
+    print("Overweight")
+else:
+    print("___") # What case is left?
