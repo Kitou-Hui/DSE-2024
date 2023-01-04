@@ -1,0 +1,12 @@
+n=0
+h=0
+n,h=input().split()
+loct=[]
+next=[]
+loct=input().split()
+next=input().split()
+while h !=0:
+  for i in n:
+    print(loct[h])
+    h=next[h]
+print("End")
