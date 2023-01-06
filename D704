@@ -1,0 +1,12 @@
+n,h=map(int,input().split())
+loct=list(map(int,input().split()))
+next=list(map(int,input().split()))
+x,y=map(int,input().split())
+loct.append(x)
+next.append(y)
+n=n+1
+for i in range(n):
+  if next[i]==0:
+    next[i]=n
+  break
+print(-1)
