@@ -1,12 +1,8 @@
-n=0
-h=0
-n,h=input().split()
-loct=[]
-next=[]
-loct=input().split()
-next=input().split()
-while h !=0:
-  for i in n:
-    print(loct[h])
-    h=next[h]
+n,h=map(int,input().split())
+loct=list(map(int,input().split()))
+next=list(map(int,input().split()))
+n=h
+while n !=0:
+    print(loct[n-1])
+    n=next[n-1]
 print("End")
