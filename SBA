@@ -1,0 +1,86 @@
+program Readability;
+
+uses SysUtils;
+
+var
+  A, WL: TStringArray;
+  inputStr, word, repeated, ww: string;
+  ASL, rcount, wcount: integer;
+  words, chars, sents, readab: real;
+
+begin
+  //Readability calculator
+  words:=0;
+  chars:=0;
+  sents:=0;
+  readab:=0;
+  ASL:= 0;
+
+  repeated:='repeat';
+  rcount:=0;
+
+  writeln('Input a passage: ');
+  readln(inputStr);
+
+
+  A := inputStr.Split(' ');
+
+  WL := TStringArray.Create('wan', 'tu', 'tee', 'fr', 'fv');
+  wcount := 0;
+
+  for word in A do
+  words := words + 1;
+  begin
+    if pos('.',word)<> 0 then
+      sents := sents+1;
+  // word := Copy(word,1,(Length(word)-1))
+    if pos('!',word)<> 0 then
+      sents := sents+1;
+    if pos('?',word)<> 0 then
+      sents := sents+1;
+
+    if word = repeated then
+       rcount := rcount+1;  //debugging needed
+
+    for ww in WL do
+    begin
+         if ww = word then
+         wcount:=wcount+1;  //debugging needed
+    end;
+  end;
+
+  //Results
+
+  Writeln();
+  Writeln('Number of words in passage: ', round(words));
+
+  chars := length(inputStr);
+  chars := chars - words + 1;
+  Writeln('Number of characters in passage: ', round(chars));
+
+  Writeln('Number of sentences in passage: ', round(sents));
+  Writeln();
+
+  readab := 4.71*chars / words + 0.5*words / sents-21.43;
+
+  readab:=round(readab);
+
+  if readab < 8 then
+    writeln('Your passage is too simple! Try harder! Readability score of your passage is: ', round(readab))
+  else if (readab < 14) and (readab >7) then
+    writeln('Your passage is good! Readability score of your passage is: ', round(readab))
+  else if readab > 13 then
+    writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
+
+  Writeln();
+  ASL:= round(words/sents);
+  Writeln('Your average sentence length is: ', ASL, ' word(s).');
+  Writeln();
+
+  Writeln('Your most repeated word is ', repeated, ', you have used it for ', rcount, ' times.');
+  Writeln();
+
+  Writeln('You have made ', wcount, ' common mistakes.');
+
+  Readln;
+end.   
