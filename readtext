@@ -1,0 +1,30 @@
+program read_text;
+
+uses SysUtils;
+
+var
+  A : TStringArray;
+  word : string;
+  i, length : integer;
+  infile : text;
+
+begin
+length := 0;
+SetLength(A,length);
+assign (infile, 'SBA.txt');
+reset(infile);
+i:=0;
+while not EOF(infile) do
+begin
+  length:= length+1;
+  SetLength(A, length);
+  readln(infile,A[i]);
+  i:=i+1;
+end;
+
+For word in A do
+begin
+writeln(word);
+end;
+readln();
+end.  
