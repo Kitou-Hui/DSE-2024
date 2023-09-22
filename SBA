@@ -4,19 +4,22 @@ uses SysUtils;
 
 var
   A, WL: TStringArray;
-  inputStr, word, repeated, ww: string;
-  ASL, rcount, wcount: integer;
-  words, chars, sents, readab: real;
+  inputStr, word, repeated, lastrepeated, ww, tempword: string;
+  ASL, rcount, wcount, i: integer;
+  words, chars, sents, readab, lastredab: real;
 
-begin
+ begin
   //Readability calculator
   words:=0;
+  tempword:=' ';
   chars:=0;
   sents:=0;
   readab:=0;
+  lastredab:=1;
   ASL:= 0;
 
   repeated:='repeat';
+  lastrepeated:='lastrepeat';
   rcount:=0;
 
   writeln('Input a passage: ');
@@ -31,21 +34,26 @@ begin
   for word in A do
   words := words + 1;
   begin
+    tempword:= Trim(word);
+
     if pos('.',word)<> 0 then
       sents := sents+1;
-  // word := Copy(word,1,(Length(word)-1))
+     // tempword:= Copy(word,1,(Length(word)-1));
     if pos('!',word)<> 0 then
       sents := sents+1;
+     // tempword:= Copy(word,1,(Length(word)-1));
     if pos('?',word)<> 0 then
       sents := sents+1;
+     // tempword:= Copy(word,1,(Length(word)-1));
 
-    if word = repeated then
-       rcount := rcount+1;  //debugging needed
+
+    if tempword = repeated then
+       rcount := rcount+1;
 
     for ww in WL do
     begin
-         if ww = word then
-         wcount:=wcount+1;  //debugging needed
+         if tempword = ww then
+         wcount:=wcount+1;
     end;
   end;
 
@@ -73,14 +81,31 @@ begin
     writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
 
   Writeln();
+
+  if readab >= lastredab then
+     Writeln('Your previous readability score was ', round(lastredab), ' , you have improved!')
+  else if readab < lastredab then
+     Writeln('Your previous readability score was ', round(lastredab), ' , add oil!');
+
+  Writeln();
+
   ASL:= round(words/sents);
   Writeln('Your average sentence length is: ', ASL, ' word(s).');
   Writeln();
 
   Writeln('Your most repeated word is ', repeated, ', you have used it for ', rcount, ' times.');
+  If repeated = lastrepeated then
+     Writeln('You have been repeatedly using the same word! Try to avoid it!')
+  else if repeated <> lastrepeated then
+     Writeln('You stopped using your previous repeated word as much! Good job!');
+
   Writeln();
 
   Writeln('You have made ', wcount, ' common mistakes.');
 
+  //Storing results for next use
+  lastrepeated := repeated;
+  lastredab := readab;
+
   Readln;
-end.   
+end.             
