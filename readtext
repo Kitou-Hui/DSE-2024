@@ -1,30 +1,127 @@
-program read_text;
+program Readability;
 
-uses SysUtils;
+uses Classes, SysUtils;
+
+//type arraytype = array [1..100] of
+
+//procedure ReadData(test);
 
 var
-  A : TStringArray;
-  word : string;
-  i, length : integer;
-  infile : text;
+  A, WL: TStringArray;
+  inputStr, word, repeated, lastrepeated, ww, tempword: string;
+  ASL, rcount, wcount: integer;
+  words, chars, sents, readab, lastredab: real;
+  infile, dictionary:text;
 
-begin
-length := 0;
-SetLength(A,length);
+ begin
+  //Read text file
 assign (infile, 'SBA.txt');
 reset(infile);
-i:=0;
 while not EOF(infile) do
 begin
-  length:= length+1;
-  SetLength(A, length);
-  readln(infile,A[i]);
-  i:=i+1;
+  readln(infile,inputStr);
 end;
 
-For word in A do
-begin
-writeln(word);
-end;
-readln();
-end.  
+writeln('Your passage: ');
+writeln(inputStr);
+
+ //Read dictionary
+//assign (dictionary,'Dictionary.txt');
+
+
+  //Readability calculator
+  words:=0;
+  tempword:=' ';
+  chars:=0;
+  sents:=0;
+  readab:=0;
+  lastredab:=1;
+  ASL:= 0;
+
+  repeated:='repeat';
+  lastrepeated:='lastrepeat';
+  rcount:=0;
+
+  A := inputStr.Split(' ');
+
+  WL := TStringArray.Create('wan', 'tu', 'tee', 'fr', 'fv');
+  wcount := 0;
+
+  for word in A do
+  words := words + 1;
+  begin
+    tempword:= Trim(word);
+
+    if pos('.',word)<> 0 then
+      sents := sents+1;
+     // tempword:= Copy(word,1,(Length(word)-1));
+    if pos('!',word)<> 0 then
+      sents := sents+1;
+     // tempword:= Copy(word,1,(Length(word)-1));
+    if pos('?',word)<> 0 then
+      sents := sents+1;
+     // tempword:= Copy(word,1,(Length(word)-1));
+
+
+    if tempword = repeated then
+       rcount := rcount+1;
+
+    for word in WL do
+    begin
+         if tempword = ww then
+         wcount:=wcount+1;
+    end;
+  end;
+
+  //Results
+
+  Writeln();
+  Writeln('Number of words in passage: ', round(words));
+
+  chars := length(inputStr);
+  chars := chars - words + 1;
+  Writeln('Number of characters in passage: ', round(chars));
+
+  Writeln('Number of sentences in passage: ', round(sents));
+  Writeln();
+
+  readab := 4.71*chars / words + 0.5*words / sents-21.43;
+
+  readab:=round(readab);
+
+  if readab < 8 then
+    writeln('Your passage is too simple! Try harder! Readability score of your passage is: ', round(readab))
+  else if (readab < 14) and (readab >7) then
+    writeln('Your passage is good! Readability score of your passage is: ', round(readab))
+  else if readab > 13 then
+    writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
+
+  Writeln();
+
+  if readab >= lastredab then
+     Writeln('Your previous readability score was ', round(lastredab), ' , you have improved!')
+  else if readab < lastredab then
+     Writeln('Your previous readability score was ', round(lastredab), ' , add oil!');
+
+  Writeln();
+
+  ASL:= round(words/sents);
+  Writeln('Your average sentence length is: ', ASL, ' word(s).');
+  Writeln();
+
+  Writeln('Your most repeated word is ', repeated, ', you have used it for ', rcount, ' times.');
+  If repeated = lastrepeated then
+     Writeln('You have been repeatedly using the same word! Try to avoid it!')
+  else if repeated <> lastrepeated then
+     Writeln('You stopped using your previous repeated word as much! Good job!');
+
+  Writeln();
+
+  Writeln('You have made ', wcount, ' common mistakes.');
+
+  //Storing results for next use
+  lastrepeated := repeated;
+  lastredab := readab;
+
+  Readln;
+end.                              
