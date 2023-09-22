@@ -7,9 +7,9 @@ uses Classes, SysUtils;
 //procedure ReadData(test);
 
 var
-  A, WL: TStringArray;
+  A, D: TStringArray;
   inputStr, word, repeated, lastrepeated, ww, tempword: string;
-  ASL, rcount, wcount: integer;
+  ASL, rcount, wcount, dlength, i: integer;
   words, chars, sents, readab, lastredab: real;
   infile, dictionary:text;
 
@@ -26,7 +26,17 @@ writeln('Your passage: ');
 writeln(inputStr);
 
  //Read dictionary
-//assign (dictionary,'Dictionary.txt');
+assign (dictionary,'Word_List.txt');
+dlength := 0;
+SetLength(D,dlength);
+reset(dictionary);
+while not EOF(dictionary) do
+begin
+  dlength:= dlength+1;
+  SetLength(D, dlength);
+  readln(dictionary,D[dlength-1]);
+end;
+
 
 
   //Readability calculator
@@ -42,31 +52,36 @@ writeln(inputStr);
   lastrepeated:='lastrepeat';
   rcount:=0;
 
+  wcount:=0;
+
   A := inputStr.Split(' ');
 
-  WL := TStringArray.Create('wan', 'tu', 'tee', 'fr', 'fv');
-  wcount := 0;
 
   for word in A do
-  words := words + 1;
   begin
+    words := words + 1;
     tempword:= Trim(word);
-
     if pos('.',word)<> 0 then
+    begin
       sents := sents+1;
-     // tempword:= Copy(word,1,(Length(word)-1));
+      tempword:= Copy(word,1,(Length(word)-1));
+    end;
     if pos('!',word)<> 0 then
+    begin
       sents := sents+1;
-     // tempword:= Copy(word,1,(Length(word)-1));
+      tempword:= Copy(word,1,(Length(word)-1));
+    end;
     if pos('?',word)<> 0 then
+    begin;
       sents := sents+1;
-     // tempword:= Copy(word,1,(Length(word)-1));
+      tempword:= Copy(word,1,(Length(word)-1));
+    end;
 
 
     if tempword = repeated then
        rcount := rcount+1;
 
-    for word in WL do
+    for ww in D do
     begin
          if tempword = ww then
          wcount:=wcount+1;
@@ -96,14 +111,12 @@ writeln(inputStr);
   else if readab > 13 then
     writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
 
-  Writeln();
 
   if readab >= lastredab then
      Writeln('Your previous readability score was ', round(lastredab), ' , you have improved!')
   else if readab < lastredab then
      Writeln('Your previous readability score was ', round(lastredab), ' , add oil!');
 
-  Writeln();
 
   ASL:= round(words/sents);
   Writeln('Your average sentence length is: ', ASL, ' word(s).');
@@ -124,4 +137,4 @@ writeln(inputStr);
   lastredab := readab;
 
   Readln;
-end.     
+end.       
