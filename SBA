@@ -2,10 +2,6 @@ program Readability;
 
 uses Classes, SysUtils;
 
-//type arraytype = array [1..100] of
-
-//procedure ReadData(test);
-
 var
   A, D: TStringArray;
   inputStr, word, repeated, lastrepeated, ww, tempword: string;
@@ -137,4 +133,4 @@ end;
   lastredab := readab;
 
   Readln;
-end.       
+end.                    
