@@ -3,28 +3,32 @@ program Readability;
 uses Classes, SysUtils;
 
 var
-  A, D: TStringArray;
-  inputStr, word, repeated, lastrepeated, ww, tempword: string;
-  ASL, rcount, wcount, dlength, i: integer;
+  W, D: TStringArray;
+  Passage, repeated, lastrepeated: string;
+  ASL, rcount, wcount, i, GAverageMistakes, dlength: integer;
   words, chars, sents, readab, lastredab: real;
-  infile, dictionary:text;
 
- begin
-  //Read text file
-assign (infile, 'SBA.txt');
-reset(infile);
-while not EOF(infile) do
+function PassageExtractor():string;
+var
+   Ptext:text;
 begin
-  readln(infile,inputStr);
+assign (Ptext, 'SBA.txt');
+reset(Ptext);
+while not EOF(Ptext) do
+      begin
+      readln(Ptext,Passage);
+      end;
+PassageExtractor:=Passage;
 end;
 
-writeln('Your passage: ');
-writeln(inputStr);
+function DictionaryExtractor():TStringArray;
+var
+   dictionary : text;
 
- //Read dictionary
-assign (dictionary,'Word_List.txt');
-dlength := 0;
+begin
 SetLength(D,dlength);
+
+assign (dictionary,'Word_List.txt');
 reset(dictionary);
 while not EOF(dictionary) do
 begin
@@ -32,105 +36,157 @@ begin
   SetLength(D, dlength);
   readln(dictionary,D[dlength-1]);
 end;
+DictionaryExtractor:=D
+end;
 
+function ReadabilityCalculator(const words,chars,sents:real): integer;
+begin
+readab:= 4.71*chars / words + 0.5*words / sents-21.43;
+ReadabilityCalculator:=round(readab);
+end;
 
+function ASLCalculator(const words,sents:real):integer;
+begin
+ASL:= round(words/sents);
+ASLCalculator:= ASL;
+end;
 
-  //Readability calculator
-  words:=0;
-  tempword:=' ';
-  chars:=0;
-  sents:=0;
-  readab:=0;
-  lastredab:=1;
-  ASL:= 0;
-
-  repeated:='repeat';
-  lastrepeated:='lastrepeat';
-  rcount:=0;
-
-  wcount:=0;
-
-  A := inputStr.Split(' ');
-
-
-  for word in A do
-  begin
-    words := words + 1;
-    tempword:= Trim(word);
-    if pos('.',word)<> 0 then
-    begin
-      sents := sents+1;
-      tempword:= Copy(word,1,(Length(word)-1));
-    end;
-    if pos('!',word)<> 0 then
-    begin
-      sents := sents+1;
-      tempword:= Copy(word,1,(Length(word)-1));
-    end;
-    if pos('?',word)<> 0 then
-    begin;
-      sents := sents+1;
-      tempword:= Copy(word,1,(Length(word)-1));
-    end;
-
-
-    if tempword = repeated then
-       rcount := rcount+1;
-
-    for ww in D do
-    begin
-         if tempword = ww then
-         wcount:=wcount+1;
-    end;
-  end;
-
-  //Results
-
-  Writeln();
-  Writeln('Number of words in passage: ', round(words));
-
-  chars := length(inputStr);
-  chars := chars - words + 1;
-  Writeln('Number of characters in passage: ', round(chars));
-
-  Writeln('Number of sentences in passage: ', round(sents));
-  Writeln();
-
-  readab := 4.71*chars / words + 0.5*words / sents-21.43;
-
-  readab:=round(readab);
-
+Procedure ReadabilityGrader();
+begin
   if readab < 8 then
-    writeln('Your passage is too simple! Try harder! Readability score of your passage is: ', round(readab))
+     Writeln('Your passage is too simple! Try harder! Readability score of your passage is: ', round(readab))
   else if (readab < 14) and (readab >7) then
-    writeln('Your passage is good! Readability score of your passage is: ', round(readab))
+     Writeln('Your passage is good! Readability score of your passage is: ', round(readab))
   else if readab > 13 then
-    writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
+     Writeln('Your passage is very high quality! Readability score of your passage is: ', round(readab));
 
 
   if readab >= lastredab then
-     Writeln('Your previous readability score was ', round(lastredab), ' , you have improved!')
+     Writeln('Your previous readability score was ', round(lastredab), ', you have improved!')
   else if readab < lastredab then
-     Writeln('Your previous readability score was ', round(lastredab), ' , add oil!');
+     Writeln('Your previous readability score was ', round(lastredab), ', add oil!');
 
+end;
 
-  ASL:= round(words/sents);
-  Writeln('Your average sentence length is: ', ASL, ' word(s).');
-  Writeln();
+Procedure RepeatedCompare(CurrentWord:String);
+begin
+  if CurrentWord = repeated then
+         rcount:=rcount+1;
 
-  Writeln('Your most repeated word is ', repeated, ', you have used it for ', rcount, ' times.');
-  If repeated = lastrepeated then
-     Writeln('You have been repeatedly using the same word! Try to avoid it!')
-  else if repeated <> lastrepeated then
-     Writeln('You stopped using your previous repeated word as much! Good job!');
+end;
+Procedure MisspellCompare(CurrentWord:String);
+var
+   ww:string;
+begin
+for ww in D do //will be updated to use the correct custom algorithm
+    begin
+         if CurrentWord = ww then
+         wcount:=wcount+1;
+    end;
+end;
+Procedure RepeatedGrader();
+begin
+Writeln('Your most repeated word is ', repeated, ', you have used it for ', rcount, ' times.');
+If repeated = lastrepeated then
+   Writeln('You have been repeatedly using the same word! Try to avoid it!')
+else if repeated <> lastrepeated then
+   Writeln('You stopped using your previous repeated word as much! Good job!');
+end;
+Procedure StoreData();
+begin
+lastrepeated := repeated;
+lastredab := readab;
+end;
+Procedure FetchData();
+begin
+lastrepeated:='lastrepeat';
+lastredab:=1;
+GAverageMistakes:=10;
+end;
+Procedure MistakesGrader();
+begin
+if (wcount <= GAverageMistakes) then
+   Writeln('You have made ', wcount, ' common mistakes. Which is less than global average. Nice job!');
+if (wcount >= GAverageMistakes) then
+   Writeln('You have made ', wcount, ' common mistakes. Which is more than global average. Add oil!');
+end;
 
-  Writeln();
+//Initialization
+begin
+words:=0;
+chars:=0;
+sents:=0;
+readab:=0;
+ASL:= 0;
 
-  Writeln('You have made ', wcount, ' common mistakes.');
+repeated:='repeat';
+rcount:=0;
 
-  //Storing results for next use
-  lastrepeated := repeated;
-  lastredab := readab;
+wcount:=0;
+dlength:=0;
 
-  Readln;
-end.                    
+//End of initialization
+
+FetchData();
+
+Passage:=PassageExtractor();
+D:= DictionaryExtractor();
+
+writeln('Your passage: ');
+writeln(Passage);
+
+W := Passage.Split(' ');
+
+for i := 1 to Length(W) do
+begin
+     words := words + 1;
+     W[i]:= Trim(W[i]);
+     if pos('.',W[i])<> 0 then
+     begin
+          sents := sents+1;
+          W[i]:= Copy(W[i],1,(Length(W[i])-1));
+     end;
+     if pos('!',W[i])<> 0 then
+     begin
+          sents := sents+1;
+          W[i]:= Copy(W[i],1,(Length(W[i])-1));
+     end;
+     if pos('?',W[i])<> 0 then
+     begin;
+           sents := sents+1;
+           W[i]:= Copy(W[i],1,(Length(W[i])-1));
+     end;
+
+     RepeatedCompare(W[i]);
+
+     MisspellCompare(W[i]);
+
+end;
+
+chars := length(Passage);
+chars := chars - words + 1;
+
+readab := ReadabilityCalculator(words,chars,sents);
+ASL:= ASLCalculator(words,sents);
+
+Writeln();
+Writeln('Number of words in passage: ', round(words));
+Writeln('Number of characters in passage: ', round(chars));
+Writeln('Number of sentences in passage: ', round(sents));
+Writeln();
+
+ReadabilityGrader();
+
+Writeln('Your average sentence length is: ', ASL, ' word(s).');
+Writeln();
+
+RepeatedGrader();
+
+Writeln();
+
+MistakesGrader();
+
+StoreData();
+
+Readln;
+end.
